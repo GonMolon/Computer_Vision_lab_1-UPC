@@ -12,6 +12,6 @@ function [im_norm] = rgb_normalizer(im)
     b_no_light = b_norm * 255;
 
     im_norm = cat(3, r_no_light, g_no_light, b_no_light);
-    
+    im_norm = uint8(im_norm);
 end
 
