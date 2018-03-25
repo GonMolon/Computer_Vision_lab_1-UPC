@@ -2,11 +2,15 @@ clear all
 close all
 
 normalizer = @rgb_normalizer;
+classifier = @histogram_classifier;
+
 
 model_images = ["05.jpg"];
 
 model = create_model(normalizer);
 
+
+results = [struct('result', {}, 'real', {}, 'features', {})];
 images = dir('data/*/*.jpg');
 correct_predictions = 0;
 for image = images'
@@ -17,6 +21,17 @@ for image = images'
     
     if ~ismember(image.name, model_images) || ~strcmp(team, 'barcelona')
         im = imread(strcat(image.folder, '/', image.name));
+        [result, features] = classifier(im, model);
+        real = int8(strcmp(team, 'barcelona'));
+        
+        if real == result
+            correct_predictions = correct_predictions + 1;
+        end
+        
+        results(end + 1) = struct('result', result, 'real', real, 'features', features);
     end      
     
 end
+
+struct2table(results)
+correct_predictions
