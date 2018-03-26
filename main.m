@@ -7,7 +7,7 @@ classifier = @histogram_classifier;
 
 model_images = ["05.jpg"];
 
-model = create_model(normalizer);
+model = create_model(normalizer, 5);
 
 
 results = [struct('result', {}, 'real', {}, 'features', {})];
