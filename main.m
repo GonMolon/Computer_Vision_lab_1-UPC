@@ -3,11 +3,13 @@ close all
 
 normalizer = @rgb_normalizer;
 classifier = @histogram_classifier;
+global BIN_SIZE
+BIN_SIZE = 5;
 
 
 model_images = ["05.jpg"];
 
-model = create_model(normalizer, 5);
+model = create_model(normalizer);
 
 
 results = [struct('result', {}, 'real', {}, 'features', {})];
