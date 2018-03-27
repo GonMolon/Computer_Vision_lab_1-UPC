@@ -5,6 +5,8 @@ normalizer = @rgb_normalizer;
 classifier = @histogram_classifier;
 global BIN_SIZE
 BIN_SIZE = 5;
+global SUBIMAGE_SIZE
+SUBIMAGE_SIZE = 100;
 
 
 model_images = ["05.jpg"];
@@ -23,7 +25,7 @@ for image = images'
     
     if ~ismember(image.name, model_images) || ~strcmp(team, 'barcelona')
         im = imread(strcat(image.folder, '/', image.name));
-        [result, features] = classifier(im, model);
+        [result, features] = classifier(im, model, normalizer);
         real = int8(strcmp(team, 'barcelona'));
         
         if real == result

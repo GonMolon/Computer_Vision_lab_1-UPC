@@ -10,6 +10,6 @@ function [model] = create_model(normalizer)
     figure, bar(red_hist), title('red histogram model')
     figure, bar(blue_hist), title('blue histogram model')
         
-    model = [red_hist, blue_hist];
+    model = [red_hist; blue_hist];
 end
 
