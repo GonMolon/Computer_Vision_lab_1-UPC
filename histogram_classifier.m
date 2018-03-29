@@ -1,6 +1,7 @@
 function [result, features] = histogram_classifier(im, model, normalizer, comp_hist)
     global SUBIMAGE_SIZE
     global VERBOSE
+    global THRESHOLD
     
     im_norm = normalizer(im);
     features.matching_subimages = 0;
@@ -41,18 +42,21 @@ function [result, features] = histogram_classifier(im, model, normalizer, comp_h
                 disp(diff);
             end
             
-            if diff < 0.003
+            if diff < THRESHOLD
                 features.matching_subimages = features.matching_subimages + 1;
                 if VERBOSE
                     disp('Subimage classified as Barcelona');
                 end
             end
             
-            %waitforbuttonpress
+            if VERBOSE
+                waitforbuttonpress
+            end
         end
     end
     
     features.score = features.matching_subimages/total_blocks;
+    
     %result = features.score > 0.08;
     result = features.matching_subimages > 0;
     if VERBOSE
