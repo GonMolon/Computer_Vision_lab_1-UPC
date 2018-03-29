@@ -10,6 +10,8 @@ global BIN_SIZE
 BIN_SIZE = 5;
 global SUBIMAGE_SIZE
 SUBIMAGE_SIZE = 100;
+global VERBOSE
+VERBOSE = false;
 
 f = figure(1);
 set(f, 'Position', [0 0 1500 700])
@@ -19,8 +21,8 @@ model_images = ["05.jpg"];
 model = create_model(normalizer);
 
 
-results = [struct('result', {}, 'real', {}, 'features', {})];
-images = dir('data/barcelona/*.jpg');
+results = [struct('name', {}, 'result', {}, 'real', {}, 'features', {})];
+images = dir('data/*/*.jpg');
 correct_predictions = 0;
 for image = images'
     
@@ -30,6 +32,7 @@ for image = images'
     
     if ~ismember(image.name, model_images) || ~strcmp(team, 'barcelona')
         
+        disp(image.name);
         im = imread(strcat(image.folder, '/', image.name));
         
         [result, features] = histogram_classifier(im, model, normalizer, comp_hist);
@@ -39,15 +42,15 @@ for image = images'
             correct_predictions = correct_predictions + 1;
             disp('Correct classification');
         else
-            disp('Incorrect classification');
+            disp('Incorrect classification!!!!!!');
         end
         
-        results(end + 1) = struct('result', result, 'real', real, 'features', features);
+        results(end + 1) = struct('name', strcat(team, image.name), 'result', result, 'real', real, 'features', features);
         
         %waitforbuttonpress
     end      
     
 end
 
-struct2table(results)
+struct2csv(results, 'results.csv');
 correct_predictions
