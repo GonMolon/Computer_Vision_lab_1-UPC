@@ -1,4 +1,4 @@
-function [im_norm] = hsv_normalizer(im)
+function [im_norm] = normalizer_hsv(im)
     hsv = rgb2hsv(im);
 %     for i = 1 : size(hsv, 1)
 %         for j = 1 : size(hsv, 2)

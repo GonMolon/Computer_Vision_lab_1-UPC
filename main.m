@@ -1,10 +1,11 @@
 clear all
 close all
 
-%normalizer = @rgb_normalizer;
-normalizer = @hsv_normalizer;
+%normalizer = @normalizer_rgb;
+normalizer = @normalizer_hsv;
 
 image_comparator = @comp_im_rgb;
+%image_comparator = @comp_im_hsv;
 
 global histogram_comparator
 global THRESHOLD

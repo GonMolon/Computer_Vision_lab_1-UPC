@@ -1,4 +1,4 @@
-function [im_norm] = rgb_normalizer(im)
+function [im_norm] = normalizer_rgb(im)
     r = im(:, :, 1);
     g = im(:, :, 2);
     b = im(:, :, 3);
