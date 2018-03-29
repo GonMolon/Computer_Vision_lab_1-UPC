@@ -34,24 +34,32 @@ function [result, features] = histogram_classifier(im, model, normalizer)
             disp('Total diff:');
             disp(diff);
             
-            if diff < 0.002
+            if diff < 0.003
                 features.matching_subimages = features.matching_subimages + 1;
-                disp('Classified as Barcelona');
+                disp('Subimage classified as Barcelona');
             end
             
-            waitforbuttonpress
+            %waitforbuttonpress
         end
     end
     
+    disp('===================================================');
     features.score = features.matching_subimages/total_blocks;
     disp('Total matching subimages');
     disp(features.matching_subimages);
+    disp('Out of:');
+    disp(total_blocks);
     disp('Score:');
     disp(features.score);
     
-    %waitforbuttonpress
-    
-    result = 1;
-    
+    result = features.score > 0.08;
+    if result
+        disp('Image classified as Barcelona');
+    else
+        disp('Image not classified as Barcelona');
+    end
+
+    disp('===================================================');
+            
 end
 

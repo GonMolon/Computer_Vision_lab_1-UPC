@@ -1,15 +1,16 @@
 clear all
 close all
 
-normalizer = @rgb_normalizer;
+%normalizer = @rgb_normalizer;
+normalizer = @hsv_normalizer; 
 classifier = @histogram_classifier;
 global BIN_SIZE
 BIN_SIZE = 5;
 global SUBIMAGE_SIZE
 SUBIMAGE_SIZE = 100;
 
-figure(1);
-set(figure(1), 'Position', [0 0 1500 700])
+f = figure(1);
+set(f, 'Position', [0 0 1500 700])
 
 model_images = ["05.jpg"];
 
@@ -35,9 +36,13 @@ for image = images'
         if real == result
             correct_predictions = correct_predictions + 1;
             disp('Correct classification');
+        else
+            disp('Incorrect classification');
         end
         
         results(end + 1) = struct('result', result, 'real', real, 'features', features);
+        
+        waitforbuttonpress
     end      
     
 end
