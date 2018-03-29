@@ -3,9 +3,9 @@ close all
 
 %normalizer = @rgb_normalizer;
 normalizer = @hsv_normalizer; 
-classifier = @histogram_classifier;
-histogram_comparator = @comp_hist_bhattacharyya;
-%histogram_comparator = @comp_hist_euclidean;
+%comp_hist = @comp_hist_euclidean;
+comp_hist = @comp_hist_chi_square;
+%comp_hist = @comp_hist_bhattacharyya;
 global BIN_SIZE
 BIN_SIZE = 5;
 global SUBIMAGE_SIZE
@@ -32,7 +32,7 @@ for image = images'
         
         im = imread(strcat(image.folder, '/', image.name));
         
-        [result, features] = classifier(im, model, normalizer);
+        [result, features] = histogram_classifier(im, model, normalizer, comp_hist);
         real = int8(strcmp(team, 'barcelona'));
         
         if real == result

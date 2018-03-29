@@ -1,4 +1,4 @@
-function [result, features] = histogram_classifier(im, model, normalizer)
+function [result, features] = histogram_classifier(im, model, normalizer, comp_hist)
     global SUBIMAGE_SIZE
     
     im_norm = normalizer(im);
@@ -22,8 +22,8 @@ function [result, features] = histogram_classifier(im, model, normalizer)
             subplot(2, 3, 4), bar(red_hist), title('Current subimage - RED histogram');
             subplot(2, 3, 5), bar(blue_hist), title('Current subimage - BLUE histogram');
             
-            red_diff = compare_histograms(red_hist, model(1, :));
-            blue_diff = compare_histograms(blue_hist, model(2, :));
+            red_diff = comp_hist(red_hist, model(1, :));
+            blue_diff = comp_hist(blue_hist, model(2, :));
             diff = red_diff^2 + blue_diff^2;
 
             disp('---------------------------------');
