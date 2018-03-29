@@ -34,7 +34,7 @@ function [result, features] = histogram_classifier(im, model, normalizer, comp_h
             disp('Total diff:');
             disp(diff);
             
-            if diff < 0.003
+            if diff < 0.001
                 features.matching_subimages = features.matching_subimages + 1;
                 disp('Subimage classified as Barcelona');
             end

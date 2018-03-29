@@ -11,6 +11,6 @@ function [im_norm] = hsv_normalizer(im)
 %         end
 %     end
     hsv(:, :, 3) = 0.5;
-    im_norm = hsv2rgb(hsv);
+    im_norm = uint8(hsv2rgb(hsv) * 255);
 end
 
