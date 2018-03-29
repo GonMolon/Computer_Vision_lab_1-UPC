@@ -26,7 +26,7 @@ global SUBIMAGE_SIZE
 SUBIMAGE_SIZE = 100;
 
 global VERBOSE
-VERBOSE = false;
+VERBOSE = true;
 
 global fig_image
 global fig_subimage
