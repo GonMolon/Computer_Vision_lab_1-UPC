@@ -4,6 +4,8 @@ close all
 %normalizer = @rgb_normalizer;
 normalizer = @hsv_normalizer; 
 classifier = @histogram_classifier;
+histogram_comparator = @comp_hist_bhattacharyya;
+%histogram_comparator = @comp_hist_euclidean;
 global BIN_SIZE
 BIN_SIZE = 5;
 global SUBIMAGE_SIZE
@@ -42,7 +44,7 @@ for image = images'
         
         results(end + 1) = struct('result', result, 'real', real, 'features', features);
         
-        waitforbuttonpress
+        %waitforbuttonpress
     end      
     
 end

@@ -39,7 +39,7 @@ function [result, features] = histogram_classifier(im, model, normalizer)
                 disp('Subimage classified as Barcelona');
             end
             
-            %waitforbuttonpress
+            waitforbuttonpress
         end
     end
     
