@@ -2,32 +2,49 @@ clear all
 close all
 
 %normalizer = @rgb_normalizer;
-normalizer = @hsv_normalizer; 
+normalizer = @hsv_normalizer;
 
+image_comparator = @comp_im_rgb;
+
+global histogram_comparator
 global THRESHOLD
-%comp_hist = @comp_hist_euclidean;
+
+%histogram_comparator = @comp_hist_euclidean;
 %THRESHOLD = 0.005;
-comp_hist = @comp_hist_chi_square;
+
+histogram_comparator = @comp_hist_chi_square;
 THRESHOLD = 0.003;
-%comp_hist = @comp_hist_bhattacharyya;
+
+%histogram_comparator = @comp_hist_bhattacharyya;
 %THRESHOLD = 0.005; %Greater than
+
 global BIN_SIZE
 BIN_SIZE = 5;
+
 global SUBIMAGE_SIZE
 SUBIMAGE_SIZE = 100;
-global VERBOSE
-VERBOSE = true;
 
-f = figure(1);
-set(f, 'Position', [0 0 1500 700])
+global VERBOSE
+VERBOSE = false;
+
+global fig_image
+global fig_subimage
+global fig_hist
+fig_image = figure(1);
+fig_subimage = figure(2);
+fig_hist = figure(3);
+
+set(fig_image, 'Position', [0 450 300 350])
+set(fig_subimage, 'Position', [0 0 300 400])
+set(fig_hist, 'Position', [300 0 1100 800])
 
 model_images = ["05.jpg"];
 
 model = create_model(normalizer);
-
+figure(fig_subimage), subplot(2, 1, 1), imshow(model), title('Model');
 
 results = [struct('name', {}, 'result', {}, 'real', {}, 'features', {})];
-images = dir('data/*/*.jpg');
+images = dir('data/barcelona/*.jpg');
 
 correct_predictions = 0;
 false_negatives = 0;
@@ -43,9 +60,12 @@ for image = images'
         
         disp(strcat(team, image.name));
         im = imread(strcat(image.folder, '/', image.name));
-        figure(3), imshow(im), title('Original');
+        im_norm = normalizer(im);
+
+        figure(fig_image), subplot(2, 1, 1), imshow(im), title('Original');
+        figure(fig_image), subplot(2, 1, 2), imshow(im_norm), title('Light normalized');        
         
-        [result, features] = histogram_classifier(im, model, normalizer, comp_hist);
+        [result, features] = classify(im_norm, model, image_comparator);
         real = int8(strcmp(team, 'barcelona'));
         
         if real == result
@@ -66,6 +86,7 @@ for image = images'
     
 end
 
+disp('===================================================');
 disp('Accuracy:');
 disp(correct_predictions / size(images, 1));
 disp('False negatives:');
@@ -76,4 +97,3 @@ disp('Out of');
 disp(size(images, 1));
 
 struct2csv(results, 'results.csv');
-correct_predictions

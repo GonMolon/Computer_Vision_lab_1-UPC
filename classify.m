@@ -1,43 +1,26 @@
-function [result, features] = histogram_classifier(im, model, normalizer, comp_hist)
+function [result, features] = classify(im_norm, model, image_comparator)
     global SUBIMAGE_SIZE
     global VERBOSE
     global THRESHOLD
+    global fig_subimage
+    global fig_hist
     
-    im_norm = normalizer(im);
     features.matching_subimages = 0;
     
-    figure(2), imshow(im_norm), title('Current image (normalized)'), figure(1);
-    
     total_blocks = 0;
-    for i_from = 1 : SUBIMAGE_SIZE : size(im, 1) - SUBIMAGE_SIZE
+    for i_from = 1 : SUBIMAGE_SIZE : size (im_norm, 1) - SUBIMAGE_SIZE
         i_to = i_from + SUBIMAGE_SIZE;
-        for j_from = 1 : SUBIMAGE_SIZE : size(im, 2) - SUBIMAGE_SIZE
+        for j_from = 1 : SUBIMAGE_SIZE : size(im_norm, 2) - SUBIMAGE_SIZE
             j_to = j_from + SUBIMAGE_SIZE;
             
             total_blocks = total_blocks + 1;
             
             sub_im = im_norm(i_from : i_to, j_from : j_to, :);
-            subplot(2, 4, 8), imshow(sub_im), title('Current subimage');
+            figure(fig_subimage), subplot(2, 1, 2), imshow(sub_im), title('Current subimage');
             
-            [red_hist, green_hist, blue_hist] = get_rgb_histograms(sub_im);
-            
-            subplot(2, 4, 5), bar(red_hist), title('Current subimage - RED histogram');
-            subplot(2, 4, 6), bar(green_hist), title('Current subimage - GREEN histogram');
-            subplot(2, 4, 7), bar(blue_hist), title('Current subimage - BLUE histogram');
-            
-            red_diff = comp_hist(red_hist, model(1, :));
-            green_diff = comp_hist(green_hist, model(2, :));
-            blue_diff = comp_hist(blue_hist, model(3, :));
-            diff = red_diff^2 + green_diff^2 + blue_diff^2;
+            diff = image_comparator(sub_im, model);
 
             if VERBOSE
-                disp('---------------------------------');
-                disp('Red diff:');
-                disp(red_diff);
-                disp('Green diff:');
-                disp(green_diff);
-                disp('Blue diff:');
-                disp(blue_diff);
                 disp('Total diff:');
                 disp(diff);
             end
@@ -51,6 +34,7 @@ function [result, features] = histogram_classifier(im, model, normalizer, comp_h
             
             if VERBOSE
                 waitforbuttonpress
+                disp('---------------------------------');
             end
         end
     end
