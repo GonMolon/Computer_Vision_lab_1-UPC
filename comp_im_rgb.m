@@ -7,16 +7,14 @@ function [diff] = comp_im_rgb(im, model)
     global model_green_hist
     global model_blue_hist
 
+    figure(fig_hist);
     if isempty(model_red_hist)
         [model_red_hist, model_green_hist, model_blue_hist] = get_rgb_histograms(model);
-        figure(fig_hist);
         subplot(2, 3, 1), bar(model_red_hist), title('Model - RED histogram');
         subplot(2, 3, 2), bar(model_green_hist), title('Model - GREEN histogram');
         subplot(2, 3, 3), bar(model_blue_hist), title('Model - BLUE histogram');
     end
-    [im_red_hist, im_green_hist, im_blue_hist] = get_rgb_histograms(im);
-            
-    figure(fig_hist);
+    [im_red_hist, im_green_hist, im_blue_hist] = get_rgb_histograms(im);  
     subplot(2, 3, 4), bar(im_red_hist), title('Current subimage - RED histogram');
     subplot(2, 3, 5), bar(im_green_hist), title('Current subimage - GREEN histogram');
     subplot(2, 3, 6), bar(im_blue_hist), title('Current subimage - BLUE histogram');

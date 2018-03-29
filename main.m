@@ -4,8 +4,8 @@ close all
 %normalizer = @normalizer_rgb;
 normalizer = @normalizer_hsv;
 
-image_comparator = @comp_im_rgb;
-%image_comparator = @comp_im_hsv;
+%image_comparator = @comp_im_rgb;
+image_comparator = @comp_im_hsv;
 
 global histogram_comparator
 global THRESHOLD
@@ -14,19 +14,19 @@ global THRESHOLD
 %THRESHOLD = 0.005;
 
 histogram_comparator = @comp_hist_chi_square;
-THRESHOLD = 0.003;
+THRESHOLD = 0.004;
 
 %histogram_comparator = @comp_hist_bhattacharyya;
 %THRESHOLD = 0.005; %Greater than
 
-global BIN_SIZE
-BIN_SIZE = 5;
+global N_BINS
+N_BINS = 60;
 
 global SUBIMAGE_SIZE
 SUBIMAGE_SIZE = 100;
 
 global VERBOSE
-VERBOSE = true;
+VERBOSE = false;
 
 global fig_image
 global fig_subimage

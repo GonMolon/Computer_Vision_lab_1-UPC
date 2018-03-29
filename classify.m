@@ -33,6 +33,7 @@ function [result, features] = classify(im_norm, model, image_comparator)
             end
             
             if VERBOSE
+                figure(fig_subimage);
                 waitforbuttonpress
                 disp('---------------------------------');
             end
