@@ -3,11 +3,12 @@ function [result, features] = classify(im_norm, model, image_comparator)
     global VERBOSE
     global THRESHOLD
     global fig_subimage
-    global fig_hist
     
     features.matching_subimages = 0;
+    features.min_diff = -1;
     
     total_blocks = 0;
+    
     for i_from = 1 : SUBIMAGE_SIZE : size (im_norm, 1) - SUBIMAGE_SIZE
         i_to = i_from + SUBIMAGE_SIZE;
         for j_from = 1 : SUBIMAGE_SIZE : size(im_norm, 2) - SUBIMAGE_SIZE
@@ -25,6 +26,10 @@ function [result, features] = classify(im_norm, model, image_comparator)
                 disp(diff);
             end
             
+            if features.min_diff == -1 || diff < features.min_diff
+                features.min_diff = diff;
+            end
+            
             if diff < THRESHOLD
                 features.matching_subimages = features.matching_subimages + 1;
                 if VERBOSE
@@ -39,19 +44,16 @@ function [result, features] = classify(im_norm, model, image_comparator)
             end
         end
     end
-    
-    features.score = features.matching_subimages/total_blocks;
-    
-    %result = features.score > 0.08;
+        
     result = features.matching_subimages > 0;
-    if VERBOSE
+    if VERBOSE || true
         disp('===================================================');
         disp('Total matching subimages');
         disp(features.matching_subimages);
         disp('Out of:');
         disp(total_blocks);
-        disp('Score:');
-        disp(features.score);
+        disp('Min_diff:');
+        disp(features.min_diff);
         if result
             disp('Image classified as Barcelona');
         else
