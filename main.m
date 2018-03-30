@@ -11,7 +11,7 @@ global histogram_comparator
 global THRESHOLD
 
 histogram_comparator = @comp_hist_euclidean;
-THRESHOLD = 7.6;
+THRESHOLD = 0.005;
 
 %histogram_comparator = @comp_hist_chi_square;
 %THRESHOLD = 0.0187;
@@ -23,10 +23,10 @@ global N_BINS
 N_BINS = 60;
 
 global SUBIMAGE_SIZE
-SUBIMAGE_SIZE = 89;
+SUBIMAGE_SIZE = 50;
 
 global VERBOSE
-VERBOSE = true;
+VERBOSE = false;
 
 global fig_image
 global fig_subimage
@@ -45,7 +45,7 @@ model = create_model(normalizer);
 figure(fig_subimage), subplot(2, 1, 1), imshow(model), title('Model');
 
 results = [struct('name', {}, 'result', {}, 'real', {}, 'features', {})];
-images = dir('data/barcelona/40.jpg');
+images = dir('data/*/*.jpg');
 
 correct_predictions = 0;
 false_negatives = 0;
