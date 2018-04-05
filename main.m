@@ -36,7 +36,7 @@ set(fig_image, 'Position', [0 450 300 350])
 set(fig_subimage, 'Position', [0 0 300 400])
 set(fig_hist, 'Position', [300 0 1100 800])
 
-model_images = "05.jpg";
+model_image = '05.jpg';
 
 model = create_model(normalizer);
 figure(fig_subimage), subplot(2, 1, 1), imshow(model), title('Model');
@@ -50,11 +50,16 @@ false_positives = 0;
 
 for image = images'
     
-    aux = regexp(image.folder,'/','split');
+    if isunix
+        slash = '/';
+    elseif ispc
+        slash = '\';
+    end
+    aux = regexp(image.folder, slash, 'split');
     aux = aux(end);
     team = aux{1};
     
-    if ~ismember(image.name, model_images) || ~strcmp(team, 'barcelona')
+    if ~strcmp(image.name, model_image) || ~strcmp(team, 'barcelona')
         
         disp(strcat(team, image.name));
         im = imread(strcat(image.folder, '/', image.name));
