@@ -1,8 +1,8 @@
 clear all
 close all
 
-%normalizer = @normalizer_rgb;
-normalizer = @normalizer_hsv;
+normalizer = @normalizer_rgb;
+%normalizer = @normalizer_hsv;
 
 %image_comparator = @comp_im_rgb;
 image_comparator = @comp_im_hsv;
@@ -16,9 +16,6 @@ THRESHOLD = 0.005;
 %histogram_comparator = @comp_hist_chi_square;
 %THRESHOLD = 0.0187;
 
-%histogram_comparator = @comp_hist_bhattacharyya;
-%THRESHOLD = 0.005; %Greater than
-
 global N_BINS
 N_BINS = 60;
 
@@ -26,7 +23,7 @@ global SUBIMAGE_SIZE
 SUBIMAGE_SIZE = 50;
 
 global VERBOSE
-VERBOSE = false;
+VERBOSE = true;
 
 global fig_image
 global fig_subimage
@@ -39,13 +36,13 @@ set(fig_image, 'Position', [0 450 300 350])
 set(fig_subimage, 'Position', [0 0 300 400])
 set(fig_hist, 'Position', [300 0 1100 800])
 
-model_images = ["05.jpg"];
+model_images = "05.jpg";
 
 model = create_model(normalizer);
 figure(fig_subimage), subplot(2, 1, 1), imshow(model), title('Model');
 
 results = [struct('name', {}, 'result', {}, 'real', {}, 'features', {})];
-images = dir('data/*/*.jpg');
+images = dir('data/barcelona/*.jpg');
 
 correct_predictions = 0;
 false_negatives = 0;
