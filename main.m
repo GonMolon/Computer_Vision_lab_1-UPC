@@ -88,12 +88,12 @@ end
 
 disp('===================================================');
 disp('Accuracy:');
-disp(correct_predictions / size(images, 1));
+disp(correct_predictions / size(results, 1));
 disp('False negatives:');
 disp(false_negatives);
 disp('False positives:');
 disp(false_positives);
 disp('Out of');
-disp(size(images, 1));
+disp(size(results, 1));
 
 struct2csv(results, 'results.csv');
