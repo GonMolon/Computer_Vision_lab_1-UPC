@@ -1,17 +1,16 @@
 clear all
 close all
 
-normalizer = @normalizer_rgb;
-%normalizer = @normalizer_hsv;
+normalizer = @normalizer_hsv;
+%normalizer = @normalizer_rgb;
 
-%image_comparator = @comp_im_rgb;
 image_comparator = @comp_im_hsv;
+%image_comparator = @comp_im_hsv2;
+%image_comparator = @comp_im_rgb;
 
-global histogram_comparator
-global THRESHOLD
-
-histogram_comparator = @comp_hist_euclidean;
-THRESHOLD = 0.005;
+global histogram_comparator THRESHOLD
+%histogram_comparator = @comp_hist_euclidean;
+%THRESHOLD = 0.005;
 
 %histogram_comparator = @comp_hist_chi_square;
 %THRESHOLD = 0.0187;
@@ -25,9 +24,7 @@ SUBIMAGE_SIZE = 50;
 global VERBOSE
 VERBOSE = true;
 
-global fig_image
-global fig_subimage
-global fig_hist
+global fig_image fig_subimage fig_hist
 fig_image = figure(1);
 fig_subimage = figure(2);
 fig_hist = figure(3);
@@ -42,7 +39,7 @@ model = create_model(normalizer);
 figure(fig_subimage), subplot(2, 1, 1), imshow(model), title('Model');
 
 results = [struct('name', {}, 'result', {}, 'real', {}, 'features', {})];
-images = dir('data/barcelona/*.jpg');
+images = dir('data/barcelona/02.jpg');
 
 correct_predictions = 0;
 false_negatives = 0;
