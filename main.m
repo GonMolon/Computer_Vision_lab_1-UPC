@@ -22,7 +22,7 @@ global SUBIMAGE_SIZE
 SUBIMAGE_SIZE = 50;
 
 global VERBOSE
-VERBOSE = true;
+VERBOSE = false;
 
 global fig_image fig_subimage fig_hist
 fig_image = figure(1);
@@ -39,7 +39,7 @@ model = create_model(normalizer);
 figure(fig_subimage), subplot(2, 1, 1), imshow(model), title('Model');
 
 results = [struct('name', {}, 'result', {}, 'real', {}, 'features', {})];
-images = dir('data/barcelona/02.jpg');
+images = dir('data/*/*.jpg');
 
 correct_predictions = 0;
 false_negatives = 0;
