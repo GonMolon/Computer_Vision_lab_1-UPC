@@ -8,6 +8,8 @@ function [diff] = comp_im_hsv(histogram, model)
         subplot(2, 1, 2), bar3(histogram);
     end
     
+    % TODO make this sum a weighted sum with the model's region
+    % TODO maybe it's enough to multiply model's region with image's one to generalize this metric
     red_count = sum(sum(histogram(25:35, 20:60)));
     blue_count = sum(sum(histogram(45:52, 20:60)));
     

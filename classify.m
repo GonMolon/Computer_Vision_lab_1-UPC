@@ -66,9 +66,6 @@ function [result, features] = classify(im_norm, models)
         if features(k).matching_subimages > 0
             final_diff = features(k).sum_diff / features(k).matching_subimages^2;
             % final_diff = final_diff - (THRESHOLD - features(k).min_diff)
-            min_diff
-            final_diff
-            
             if min_diff == -1 || final_diff < min_diff
                 result = k;
                 min_diff = final_diff;

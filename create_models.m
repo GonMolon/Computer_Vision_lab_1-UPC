@@ -37,7 +37,7 @@ function [models] = create_models(normalizer)
     images(end).name = '11.jpg';
 
 
-    models = [struct('team_id', {}, 'name', {}, 'im', {}, 'im_norm', {}, 'histogram', {}, 'properties', {})];
+    models = [struct('team_id', {}, 'name', {}, 'im', {}, 'im_norm', {}, 'histogram', {}, 'regions', {})];
 
 
     for k = 1 : length(images)
@@ -46,5 +46,13 @@ function [models] = create_models(normalizer)
         models(k).im = images(k).im;
         models(k).im_norm = normalizer(models(k).im);
         models(k).histogram = get_hsv_histogram(models(k).im_norm);
+        models(k).regions = extract_regions(models(k).histogram);
     end
+end
+
+
+function [regions] = extract_regions(histogram)
+    centroids = k_means(3, histogram)
+    regions = [struct('from_x', {}, 'to_x', {}, 'from_y', {}, 'to_y', {}, 'sum', {}, 'hist', {})]
+
 end

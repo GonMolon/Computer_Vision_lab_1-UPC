@@ -10,6 +10,9 @@ THRESHOLD = 0.5;
 global SUBIMAGE_SIZE
 SUBIMAGE_SIZE = 50;
 
+global SEED
+SEED = 17;
+
 global VERBOSE
 VERBOSE = false;
 
