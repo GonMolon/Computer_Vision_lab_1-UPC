@@ -1,22 +1,11 @@
 clear all
 close all
 
-normalizer = @normalizer_hsv;
-%normalizer = @normalizer_rgb;
-
-image_comparator = @comp_im_hsv;
-%image_comparator = @comp_im_hsv2;
-%image_comparator = @comp_im_rgb;
-
-global histogram_comparator THRESHOLD
-%histogram_comparator = @comp_hist_euclidean;
-%THRESHOLD = 0.005;
-
-%histogram_comparator = @comp_hist_chi_square;
-%THRESHOLD = 0.0187;
-
 global N_BINS
 N_BINS = 60;
+
+global THRESHOLD
+THRESHOLD = 0.5;
 
 global SUBIMAGE_SIZE
 SUBIMAGE_SIZE = 50;
@@ -24,75 +13,62 @@ SUBIMAGE_SIZE = 50;
 global VERBOSE
 VERBOSE = false;
 
-global fig_image fig_subimage fig_hist
-fig_image = figure(1);
-fig_subimage = figure(2);
-fig_hist = figure(3);
+global FIG_IMAGE FIG_SUBIMAGE FIG_HIST
+FIG_IMAGE = figure(1);
+FIG_SUBIMAGE = figure(2);
+FIG_HIST = figure(3);
 
-set(fig_image, 'Position', [0 450 300 350])
-set(fig_subimage, 'Position', [0 0 300 400])
-set(fig_hist, 'Position', [300 0 1100 800])
+set(FIG_IMAGE, 'Position', [0 450 300 350])
+set(FIG_SUBIMAGE, 'Position', [0 0 300 400])
+set(FIG_HIST, 'Position', [300 0 1100 800])
 
-model_image = '05.jpg';
-
-model = create_model(normalizer);
-figure(fig_subimage), subplot(2, 1, 1), imshow(model), title('Model');
+models = create_models(@normalizer_hsv);
 
 results = [struct('name', {}, 'result', {}, 'real', {}, 'features', {})];
-images = dir('data/*/*.jpg');
+teams = dir('data/*');
 
 correct_predictions = 0;
-false_negatives = 0;
-false_positives = 0;
 
-for image = images'
-    
-    if isunix
-        slash = '/';
-    elseif ispc
-        slash = '\';
+k = 1;
+for team = teams'
+    if sum(ismember(team.name, '.'))
+        continue
     end
-    aux = regexp(image.folder, slash, 'split');
-    aux = aux(end);
-    team = aux{1};
     
-    if ~strcmp(image.name, model_image) || ~strcmp(team, 'barcelona')
-        
-        disp(strcat(team, image.name));
-        im = imread(strcat(image.folder, '/', image.name));
-        im_norm = normalizer(im);
+    images = dir(strcat('data/', team.name, '/*.jpg'));
+    for image = images'
+        if ~strcmp(image.name, models(k).name)
+            
+            disp(strcat(team.name, image.name));
+            im = imread(strcat(image.folder, '/', image.name));
+            im_norm = normalizer_hsv(im);
 
-        figure(fig_image), subplot(2, 1, 1), imshow(im), title('Original');
-        figure(fig_image), subplot(2, 1, 2), imshow(im_norm), title('Light normalized');        
-        
-        [result, features] = classify(im_norm, model, image_comparator);
-        real = int8(strcmp(team, 'barcelona'));
-        
-        if real == result
-            correct_predictions = correct_predictions + 1;
-            disp('Correct classification');
-        else
-            disp('Incorrect classification!!!!!!');
-            if strcmp(team, 'barcelona')
-                false_negatives = false_negatives + 1;
+            figure(FIG_IMAGE), subplot(2, 1, 1), imshow(im), title('Original');
+            figure(FIG_IMAGE), subplot(2, 1, 2), imshow(hsv2rgb(im_norm)), title('Light normalized');        
+            
+            [result, features] = classify(im_norm, models);
+            
+            if k == result
+                correct_predictions = correct_predictions + 1;
+                disp('Correct classification');
             else
-                false_positives = false_positives + 1;
+                disp('Incorrect classification!!!!!!');
             end
-        end
-        
-        results(end + 1) = struct('name', strcat(team, image.name), 'result', result, 'real', real, 'features', features);
-        
-    end      
-    
+            
+            results(end + 1) = struct('name', strcat(team.name + '-' + image.name), 'result', result, 'real', k, 'features', features);
+        end        
+    end
+
+    k = k + 1
 end
+
+
 
 disp('===================================================');
 disp('Accuracy:');
 disp(correct_predictions / size(results, 1));
-disp('False negatives:');
-disp(false_negatives);
-disp('False positives:');
-disp(false_positives);
+disp('Correct predictions');
+disp(correct_predictions);
 disp('Out of');
 disp(size(results, 1));
 
