@@ -7,7 +7,7 @@ function [centroids] = k_means(K, hist)
     
     C = [[randi(N, [1, K])]', [randi(M, [1, K])]'];
     if VERBOSE
-        %show_centroids(C, hist);
+        show_centroids(C, hist);
     end
     for iteration = 1 : max_iterations
         C_next = zeros(K, 2);
@@ -40,7 +40,7 @@ function [centroids] = k_means(K, hist)
         end
         C = C_next;
         if VERBOSE
-            %show_centroids(C, hist);
+            show_centroids(C, hist);
         end
     end
     centroids = [struct('x', {}, 'y', {}, 'weight', {})];
@@ -54,8 +54,6 @@ function [centroids] = k_means(K, hist)
 end
 
 function show_centroids(C, hist)
-    global FIG_HIST
-    figure(FIG_HIST), subplot(1, 1, 1);
     K = length(C);
     bar3(hist);
     hold on

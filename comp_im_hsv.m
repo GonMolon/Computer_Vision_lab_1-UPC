@@ -3,8 +3,9 @@ function [diff] = comp_im_hsv(histogram, model)
     global FIG_HIST
 
     if VERBOSE
+        regions_lib = hsv_regions();
         figure(FIG_HIST);
-        subplot(2, 1, 1), bar3(model.histogram);
+        subplot(2, 1, 1), regions_lib.show_regions(model.regions, model.histogram);
         subplot(2, 1, 2), bar3(histogram);
     end
     

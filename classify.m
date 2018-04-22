@@ -52,8 +52,8 @@ function [result, features] = classify(im, models)
                 end
                 
                 if VERBOSE
-                    figure(FIG_SUBIMAGE);
-                    waitforbuttonpress
+                    figure(FIG_HIST);
+                    while waitforbuttonpress == 0 end
                     disp('---------------------------------');
                 end
             end   
