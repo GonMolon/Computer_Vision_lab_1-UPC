@@ -1,11 +1,14 @@
-function [centroids, weights] = k_means(K, hist)
+function [centroids] = k_means(K, hist)
+    global VERBOSE
     global SEED
     rng(SEED)
     max_iterations = 1000;
     [N, M] = size(hist);
     
-    C = [[randi(N, [1, K])]', [randi(M, [1, K])]']
-    show_centroids(C, hist);
+    C = [[randi(N, [1, K])]', [randi(M, [1, K])]'];
+    if VERBOSE
+        show_centroids(C, hist);
+    end
     for iteration = 1 : max_iterations
         C_next = zeros(K, 2);
         weights = zeros(K , 1);
@@ -25,18 +28,21 @@ function [centroids, weights] = k_means(K, hist)
             end
         end
         C_next = floor(C_next ./ weights);
+        C_next
         for k = 1 : K
             if C_next(k, 1) < 1
                 C_next(k, 1) = C_next(k, 1) + N;
-            elseif C_next(K, 1) > N
+            elseif C_next(k, 1) > N
                 C_next(k, 1) = C_next(k, 1) - N;
             end
         end
         if isequal(C, C_next)
             break
         end
-        C = C_next
-        show_centroids(C, hist);
+        C = C_next;
+        if VERBOSE
+            show_centroids(C, hist);
+        end
     end
     centroids = [struct('x', {}, 'y', {}, 'weight', {})];
     for k = 1 : K
@@ -45,7 +51,7 @@ function [centroids, weights] = k_means(K, hist)
         end
     end
     [values, indexes] = sort([centroids.weight],'descend');
-    centroids = centroids(indexes) 
+    centroids = centroids(indexes);
 end
 
 function show_centroids(C, hist)
@@ -53,6 +59,7 @@ function show_centroids(C, hist)
     bar3(hist)
     hold on
     [x, y, z] = sphere;
+    C
     for k = 1 : K
         surf(x+floor(C(k, 2)), y + floor(C(k, 1)), z*0.01)
     end
