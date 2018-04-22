@@ -28,7 +28,6 @@ function [centroids] = k_means(K, hist)
             end
         end
         C_next = floor(C_next ./ weights);
-        C_next
         for k = 1 : K
             if C_next(k, 1) < 1
                 C_next(k, 1) = C_next(k, 1) + N;
@@ -55,11 +54,12 @@ function [centroids] = k_means(K, hist)
 end
 
 function show_centroids(C, hist)
+    global FIG_HIST
+    figure(FIG_HIST), subplot(1, 1, 1);
     K = length(C);
     bar3(hist)
     hold on
     [x, y, z] = sphere;
-    C
     for k = 1 : K
         surf(x+floor(C(k, 2)), y + floor(C(k, 1)), z*0.01)
     end

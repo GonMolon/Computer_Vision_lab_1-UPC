@@ -1,5 +1,8 @@
-function [models] = create_models(normalizer)
+function [models] = create_models()
+    global FIG_SUBIMAGE
+
     images = [struct('im', {}, 'name', {})];
+
     im = imread('data/acmilan/22.jpg');
     images(end + 1).im = im(75:170, 50:110, :);
     images(end).name = '22.jpg';
@@ -41,18 +44,28 @@ function [models] = create_models(normalizer)
 
 
     for k = 1 : length(images)
+        figure(FIG_SUBIMAGE), subplot(2, 1, 1), imshow(images(k).im);
         models(k).team_id = k;
         models(k).name = images(k).name;
         models(k).im = images(k).im;
-        models(k).im_norm = normalizer(models(k).im);
-        models(k).histogram = get_hsv_histogram(models(k).im_norm);
+        models(k).im_norm = hsv2rgb(normalizer_hsv(models(k).im));
+        models(k).histogram = get_hsv_histogram(models(k).im);
         models(k).regions = extract_regions(models(k).histogram);
     end
 end
 
 
 function [regions] = extract_regions(histogram)
-    centroids = k_means(3, histogram)
+    global SEED
+    max_weight = 0;
+    for iteration = 1 : 1
+        centroids = k_means(3, histogram);
+        SEED = SEED + 1;
+    end
     regions = [struct('from_x', {}, 'to_x', {}, 'from_y', {}, 'to_y', {}, 'sum', {}, 'hist', {})]
 
+end
+
+function [regions, weight] = get_regions(centroids)
+    
 end

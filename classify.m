@@ -1,4 +1,4 @@
-function [result, features] = classify(im_norm, models)
+function [result, features] = classify(im, models)
     global SUBIMAGE_SIZE
     global VERBOSE
     global THRESHOLD
@@ -12,23 +12,23 @@ function [result, features] = classify(im_norm, models)
     end
     
     total_blocks = 0;
-    for i_from = 1 : SUBIMAGE_SIZE : size (im_norm, 1) - SUBIMAGE_SIZE
+    for i_from = 1 : SUBIMAGE_SIZE : size (im, 1) - SUBIMAGE_SIZE
         i_to = i_from + SUBIMAGE_SIZE;
-        for j_from = 1 : SUBIMAGE_SIZE : size(im_norm, 2) - SUBIMAGE_SIZE
+        for j_from = 1 : SUBIMAGE_SIZE : size(im, 2) - SUBIMAGE_SIZE
             j_to = j_from + SUBIMAGE_SIZE;
             
             total_blocks = total_blocks + 1;
             
-            sub_im = im_norm(i_from : i_to, j_from : j_to, :);
+            sub_im = im(i_from : i_to, j_from : j_to, :);
             if VERBOSE
-                figure(FIG_SUBIMAGE), subplot(2, 1, 2), imshow(hsv2rgb(sub_im)), title('Current subimage');
+                figure(FIG_SUBIMAGE), subplot(2, 1, 2), imshow(hsv2rgb(normalizer_hsv(sub_im)), title('Current subimage');
             end
             
             histogram = get_hsv_histogram(sub_im);
             for k = 1 : length(models)
                 model = models(k);
                 if VERBOSE
-                    figure(FIG_SUBIMAGE), subplot(2, 1, 1), imshow(hsv2rgb(model.im_norm)), title('Model');
+                    figure(FIG_SUBIMAGE), subplot(2, 1, 1), imshow(model.im_norm), title('Model');
                 end
 
                 diff = comp_im_hsv(histogram, model);

@@ -14,7 +14,7 @@ global SEED
 SEED = 17;
 
 global VERBOSE
-VERBOSE = false;
+VERBOSE = true;
 
 if VERBOSE
     global FIG_IMAGE FIG_SUBIMAGE FIG_HIST
@@ -27,7 +27,7 @@ if VERBOSE
     set(FIG_HIST, 'Position', [300 0 1100 800])
 end
 
-models = create_models(@normalizer_hsv);
+models = create_models();
 
 results = [struct('name', {}, 'result', {}, 'real', {}, 'features', {})];
 correct_predictions = 0;
@@ -45,14 +45,13 @@ for team = teams'
             
             disp(strcat(team.name, image.name));
             im = imread(strcat(image.folder, '/', image.name));
-            im_norm = normalizer_hsv(im);
 
             if VERBOSE
                 figure(FIG_IMAGE), subplot(2, 1, 1), imshow(im), title('Original');
-                figure(FIG_IMAGE), subplot(2, 1, 2), imshow(hsv2rgb(im_norm)), title('Light normalized');     
+                figure(FIG_IMAGE), subplot(2, 1, 2), imshow(hsv2rgb(normalizer_hsv(im))), title('Light normalized');     
             end   
             
-            [result, features] = classify(im_norm, models);
+            [result, features] = classify(im, models);
             
             if k == result
                 correct_predictions = correct_predictions + 1;
