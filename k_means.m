@@ -35,7 +35,7 @@ function [centroids] = k_means(K, hist)
                 C_next(k, 1) = C_next(k, 1) - N;
             end
         end
-        if isequal(C, C_next)
+        if isequaln(C, C_next)
             break
         end
         C = C_next;
@@ -61,10 +61,13 @@ function show_centroids(C, hist)
     hold on
     [x, y, z] = sphere;
     for k = 1 : K
-        surf(x+floor(C(k, 2)), y + floor(C(k, 1)), z*0.01)
+        if ~isnan(C(k, 1)) && ~isnan(C(k, 2))
+            surf(x+floor(C(k, 2)), y + floor(C(k, 1)), z*0.01)
+        end
     end
     hold off
-    waitforbuttonpress
+    while waitforbuttonpress == 0
+    end
 end
 
 function [dist, P_eucl] = get_dist(centroid, P, dim)

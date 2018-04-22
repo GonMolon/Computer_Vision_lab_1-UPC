@@ -58,8 +58,8 @@ end
 function [regions] = extract_regions(histogram)
     global SEED
     max_weight = 0;
-    for iteration = 1 : 1
-        centroids = k_means(3, histogram);
+    for iteration = 1 : 2
+        centroids = k_means(10, histogram);
         SEED = SEED + 1;
     end
     regions = [struct('from_x', {}, 'to_x', {}, 'from_y', {}, 'to_y', {}, 'sum', {}, 'hist', {})]
