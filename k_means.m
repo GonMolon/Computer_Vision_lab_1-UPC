@@ -1,13 +1,14 @@
-function [centroids] = k_means(K, hist)
+function [centroids, weights] = k_means(K, hist)
     global SEED
-    %rng(SEED)
+    rng(SEED)
     max_iterations = 1000;
     [N, M] = size(hist);
     
     C = [[randi(N, [1, K])]', [randi(M, [1, K])]']
+    show_centroids(C, hist);
     for iteration = 1 : max_iterations
         C_next = zeros(K, 2);
-        count = zeros(K , 1);
+        weights = zeros(K , 1);
         for i = 1 : N
             for j = 1 : M
                 P = [i, j];
@@ -19,16 +20,11 @@ function [centroids] = k_means(K, hist)
                 end
                 [dist, k] = min(dists);
                 
-                if dist < 30
-                    C_next(k, :) = C_next(k, :) + P_eucl(k, :) * hist(i, j);
-                    count(k) = count(k) + hist(i, j);
-                end
+                C_next(k, :) = C_next(k, :) + P_eucl(k, :) * hist(i, j);
+                weights(k) = weights(k) + hist(i, j);
             end
         end
-        C_next = C_next ./ count
-        if isequal(C, C_next)
-            break
-        end
+        C_next = floor(C_next ./ weights);
         for k = 1 : K
             if C_next(k, 1) < 1
                 C_next(k, 1) = C_next(k, 1) + N;
@@ -36,19 +32,33 @@ function [centroids] = k_means(K, hist)
                 C_next(k, 1) = C_next(k, 1) - N;
             end
         end
-        C = C_next;
-        bar3(hist)
-        hold on
-        [x, y, z] = sphere;
-        
-        for k = 1 : K
-            surf(x+C(k, 1), y + C(k, 2), z*0.01)
+        if isequal(C, C_next)
+            break
         end
-        hold off
-        waitforbuttonpress       
+        C = C_next
+        show_centroids(C, hist);
     end
-    centroids = int8(C);
-end    
+    centroids = [struct('x', {}, 'y', {}, 'weight', {})];
+    for k = 1 : K
+        if ~isnan(C(k, 1)) && ~isnan(C(k, 2))
+            centroids(end + 1) = struct('x', C(k, 1), 'y', C(k, 2), 'weight', weights(k));
+        end
+    end
+    [values, indexes] = sort([centroids.weight],'descend');
+    centroids = centroids(indexes) 
+end
+
+function show_centroids(C, hist)
+    K = length(C);
+    bar3(hist)
+    hold on
+    [x, y, z] = sphere;
+    for k = 1 : K
+        surf(x+floor(C(k, 2)), y + floor(C(k, 1)), z*0.01)
+    end
+    hold off
+    waitforbuttonpress
+end
 
 function [dist, P_eucl] = get_dist(centroid, P, dim)
     P_eucl = P;
