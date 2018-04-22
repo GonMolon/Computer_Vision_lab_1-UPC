@@ -49,7 +49,7 @@ function [centroids] = k_means(K, hist)
             centroids(end + 1) = struct('x', C(k, 1), 'y', C(k, 2), 'weight', weights(k));
         end
     end
-    [values, indexes] = sort([centroids.weight],'descend');
+    [values, indexes] = sort([centroids.weight], 'descend');
     centroids = centroids(indexes);
 end
 
@@ -57,12 +57,12 @@ function show_centroids(C, hist)
     global FIG_HIST
     figure(FIG_HIST), subplot(1, 1, 1);
     K = length(C);
-    bar3(hist)
+    bar3(hist);
     hold on
     [x, y, z] = sphere;
     for k = 1 : K
         if ~isnan(C(k, 1)) && ~isnan(C(k, 2))
-            surf(x+floor(C(k, 2)), y + floor(C(k, 1)), z*0.01)
+            surf(x+floor(C(k, 2)), y + floor(C(k, 1)), z*0.01);
         end
     end
     hold off

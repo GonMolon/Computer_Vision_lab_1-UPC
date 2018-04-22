@@ -58,14 +58,62 @@ end
 function [regions] = extract_regions(histogram)
     global SEED
     max_weight = 0;
-    for iteration = 1 : 2
+    for iteration = 1 : 10
         centroids = k_means(10, histogram);
         SEED = SEED + 1;
-    end
-    regions = [struct('from_x', {}, 'to_x', {}, 'from_y', {}, 'to_y', {}, 'sum', {}, 'hist', {})]
 
+        [regions, weight] = get_regions(histogram, centroids);
+        if weight > max_weight
+            best_regions = regions;
+        end
+    end
+    regions = best_regions;
+
+    if VERBOSE
+        show_regions(histogram, regions)
+    end
 end
 
-function [regions, weight] = get_regions(centroids)
+function show_regions(histogram, regions)
+    global FIG_HIST
+    figure(FIG_HIST), subplot(2, 1, 2);
+    bar3(histogram)
+    hold on
+    for region = regions
+        
+    end
+    hold off
+end
+
+function [regions, weight] = get_regions(histogram, centroids)
+    regions = [struct('from_x', {}, 'to_x', {}, 'from_y', {}, 'to_y', {}, 'sum', {})];
+    bitmap = zeros(size(histogram));
+    for k = 1 : length(centroids)
+        if bitmap(centroids(k).x) == 0 && bitmap(centroids(k).y) == 0
+            sum = histogram(centroids(k).x, centroids(k).y);
+            region = struct('from_x', centroids(k).x, 'to_x', centroids(k).x, 'from_y', centroids(k).y, 'to_y', centroids(k).y, 'sum', sum);
+            
+            DIRS = [[0, 1]; [0, -1]; [1, 0]; [-1, 0]];
+            for i = 1 : length(DIRS)
+                dir = DIRS(i);
+                [region, bitmap] = expand_region(region, histogram, bitmap, dir);
+            end
+            regions(end + 1) = region;
+        end
+    end
     
+    THRESHOLD = 0.3;
+    regions = regions([regions.sum] >= THRESHOLD);
+    [~, indexes] = sort([regions.sum], 'descend');
+    regions = regions(indexes(1:min(3, length(regions))));
+    weight = sum([regions.sum]);
+    
+    if length(regions) == 0
+        disp("Not significant regions found!!!!!");
+    end
+end
+
+function [region_expanded, bitmap_updated] = expand_region(region, histogram, bitmap, dir)
+    region_expanded = region;
+    bitmap_updated = bitmap;
 end
