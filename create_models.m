@@ -11,8 +11,8 @@ function [models] = create_models()
     images(end + 1).im = im(250:end, 50:210, :);
     images(end).name = '05.jpg'; 
 
-    im = imread('data/chelsea/26.jpg');
-    images(end + 1).im = im(140:end, 15:150, :);
+    im = imread('data/chelsea/18.jpg');
+    images(end + 1).im = im(60:160, 37:100, :);
     images(end).name = '26.jpg';
 
     im = imread('data/juventus/15.jpg');

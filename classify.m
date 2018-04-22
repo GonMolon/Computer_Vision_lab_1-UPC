@@ -21,14 +21,14 @@ function [result, features] = classify(im, models)
             
             sub_im = im(i_from : i_to, j_from : j_to, :);
             if VERBOSE
-                figure(FIG_SUBIMAGE), subplot(2, 1, 2), imshow(hsv2rgb(normalizer_hsv(sub_im))), title('Current subimage');
+                figure(FIG_SUBIMAGE), subplot(2, 1, 2), imshow(sub_im), title('Current subimage');
             end
             
             histogram = get_hsv_histogram(sub_im);
             for k = 1 : length(models)
                 model = models(k);
                 if VERBOSE
-                    figure(FIG_SUBIMAGE), subplot(2, 1, 1), imshow(model.im_norm), title('Model');
+                    figure(FIG_SUBIMAGE), subplot(2, 1, 1), imshow(model.im), title('Model');
                 end
 
                 diff = comp_im_hsv(histogram, model);
