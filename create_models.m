@@ -55,7 +55,7 @@ function [models] = create_models()
 end
 
 
-function [regions] = extract_regions(histogram)
+function [best_regions] = extract_regions(histogram)
     global SEED
     max_weight = 0;
     for iteration = 1 : 10
@@ -67,37 +67,15 @@ function [regions] = extract_regions(histogram)
             best_regions = regions;
         end
     end
-    regions = best_regions;
-
-    if VERBOSE
-        show_regions(histogram, regions)
-    end
-end
-
-function show_regions(histogram, regions)
-    global FIG_HIST
-    figure(FIG_HIST), subplot(2, 1, 2);
-    bar3(histogram)
-    hold on
-    for region = regions
-        
-    end
-    hold off
 end
 
 function [regions, weight] = get_regions(histogram, centroids)
-    regions = [struct('from_x', {}, 'to_x', {}, 'from_y', {}, 'to_y', {}, 'sum', {})];
-    bitmap = zeros(size(histogram));
+    regions = [struct('x_from', {}, 'x_to', {}, 'y_from', {}, 'y_to', {}, 'sum', {})];
+    bitmap = false(size(histogram));
     for k = 1 : length(centroids)
-        if bitmap(centroids(k).x) == 0 && bitmap(centroids(k).y) == 0
-            sum = histogram(centroids(k).x, centroids(k).y);
-            region = struct('from_x', centroids(k).x, 'to_x', centroids(k).x, 'from_y', centroids(k).y, 'to_y', centroids(k).y, 'sum', sum);
-            
-            DIRS = [[0, 1]; [0, -1]; [1, 0]; [-1, 0]];
-            for i = 1 : length(DIRS)
-                dir = DIRS(i);
-                [region, bitmap] = expand_region(region, histogram, bitmap, dir);
-            end
+        if ~bitmap(centroids(k).x, centroids(k).y)
+            region = struct('x_from', centroids(k).x, 'x_to', centroids(k).x, 'y_from', centroids(k).y, 'y_to', centroids(k).y, 'sum', histogram(centroids(k).x, centroids(k).y));            
+            [region, bitmap] = expand_region(region, bitmap, histogram);
             regions(end + 1) = region;
         end
     end
@@ -113,7 +91,51 @@ function [regions, weight] = get_regions(histogram, centroids)
     end
 end
 
-function [region_expanded, bitmap_updated] = expand_region(region, histogram, bitmap, dir)
-    region_expanded = region;
-    bitmap_updated = bitmap;
+function [region, bitmap] = expand_region(region, bitmap, histogram)
+    global VERBOSE
+    global FIG_HIST
+    
+    region.x_from = region.x_from - 5;
+    region.x_to = region.x_to + 5;
+    region.y_from = max(region.y_from - 10, 1);
+    region.y_to = min(region.y_to + 10, size(bitmap, 2));
+    
+    [N, M] = size(bitmap);
+    
+    if region.x_from < 1
+        x_from_1 = region.x_from + N;
+        x_to_1 = N;
+        x_from_2 = 1;
+        x_to_2 = region.x_to;
+    elseif region.x_to > N
+        x_from_1 = region.x_from;
+        x_to_1 = N;
+        x_from_2 = 1;
+        x_to_2 = region.x_to - N;
+    else
+        x_from_1 = region.x_from;
+        x_to_1 = region.x_to;
+        x_from_2 = 1;
+        x_to_2 = 0;
+    end
+    
+    bitmap(x_from_1 : x_to_1, region.y_from : region.y_to) = true;
+    bitmap(x_from_2 : x_to_2, region.y_from : region.y_to) = true;
+    region.sum = sum(sum(histogram(x_from_1 : x_to_1, region.y_from : region.y_to)));
+    region.sum = sum(sum(histogram(x_from_2 : x_to_2, region.y_from : region.y_to)));
+    
+    if VERBOSE
+        for i = 1 : N
+            for j = 1 : M
+                if bitmap(i, j)
+                    histogram(i, j) = 0.1;
+                end
+            end
+        end
+        figure(FIG_HIST), bar3(histogram);
+    end
+end
+
+function [area] = get_area(region)
+    area = (region.x_to - region.x_from + 1) * (region.y_to - region.y_from + 1);
 end

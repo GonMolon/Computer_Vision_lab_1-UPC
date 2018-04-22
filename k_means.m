@@ -66,8 +66,8 @@ function show_centroids(C, hist)
         end
     end
     hold off
-    while waitforbuttonpress == 0
-    end
+%     while waitforbuttonpress == 0
+%     end
 end
 
 function [dist, P_eucl] = get_dist(centroid, P, dim)
