@@ -78,14 +78,18 @@ function [result, features] = classify(im, models)
         disp('===================================================');
         disp('Result');
         disp(result);
-        disp('Total matching subimages');
-        disp(features(result).matching_subimages);
-        disp('Out of:');
-        disp(total_blocks);
-        disp('Min_diff:');
-        disp(features(result).min_diff);
-        disp('Final_diff');
-        disp(min_diff);
+        if result == 0
+            disp('No matching subimages');
+        else
+            disp('Total matching subimages');
+            disp(features(result).matching_subimages);
+            disp('Out of:');
+            disp(total_blocks);
+            disp('Min_diff:');
+            disp(features(result).min_diff);
+            disp('Final_diff');
+            disp(min_diff);
+        end
         disp('===================================================');
     end
 end

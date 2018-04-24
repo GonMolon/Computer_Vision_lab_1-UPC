@@ -1,15 +1,16 @@
 function [regions_lib] = hsv_regions()
     regions_lib.extract_regions = @extract_regions;
     regions_lib.show_regions = @show_regions;
+    regions_lib.get_region_sum = @get_region_sum;
 end
 
 function [best_regions, max_weight] = extract_regions(histogram)
     global VERBOSE
     was_verbose = VERBOSE;
-    VERBOSE = false; % Comment this line to plot the process finding the regions
+%     VERBOSE = false; % Comment this line to plot the process finding the regions
     global SEED
     max_weight = 0;
-    for iteration = 1 : 3
+    for iteration = 1 : 1
         centroids = k_means(10, histogram);
         SEED = SEED + 1;
 
@@ -94,11 +95,15 @@ function [region, bitmap] = expand_region(region, bitmap, histogram)
     end
 end
 
-function [free] = get_area_value(x_from, x_to, y_from, y_to, matrix, func)
+function [value] = get_region_sum(region, histogram)
+    value = get_area_value(region.x_from, region.x_to, region.y_from, region.y_to, histogram, @sum);
+end
+
+function [value] = get_area_value(x_from, x_to, y_from, y_to, matrix, func)
     [N, ~] = size(matrix);
     [range_x_1, range_x_2] = get_ranges(x_from, x_to, N);
     range_y = y_from : y_to;
-    free = func([reshape(matrix(range_x_1, range_y), 1, []), reshape(matrix(range_x_2, range_y), 1, [])]);
+    value = func([reshape(matrix(range_x_1, range_y), 1, []), reshape(matrix(range_x_2, range_y), 1, [])]);
 end
 
 function [matrix] = set_area_value(x_from, x_to, y_from, y_to, matrix, value)
