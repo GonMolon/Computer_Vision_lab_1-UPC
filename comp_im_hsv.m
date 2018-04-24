@@ -9,6 +9,20 @@ function [diff] = comp_im_hsv(histogram, model)
         subplot(2, 1, 2), bar3(histogram);
     end
     
+    if model.team_id == 2
+        blue_count = sum(sum(histogram(35:45, 30:60)));
+        red_count = sum(sum(histogram(55:60, 30:60)));
+        red_count = red_count + sum(sum(histogram(1:3, 30:60)));
+        diff_penalization = 8*(red_count - blue_count)^2;
+        proportion_penalization = 1 - (red_count + blue_count);
+
+        diff = diff_penalization + proportion_penalization;
+        if diff < 0.5
+            diff = 0;
+            return
+        end
+    end
+    
     diff = 0;
     for region = model.regions
         hist_sum = regions_lib.get_region_sum(region, histogram);
