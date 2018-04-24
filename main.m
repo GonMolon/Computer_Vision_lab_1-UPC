@@ -34,15 +34,26 @@ end
 
 models = create_models();
 
+folders = dir('data/*');
+teams = [];
+for folder = folders'
+    if sum(ismember(folder.name, '.')) == 0
+        if length(teams) == 0
+            teams = folder;
+        else
+            teams(end + 1) = folder;
+        end
+    end
+end
+
 results = [struct('name', {}, 'result', {}, 'real', {}, 'features', {})];
 correct_predictions = 0;
 
-teams = dir('data/*');
+confussion_matrix = [];
 k = 1;
-for team = teams'
-    if sum(ismember(team.name, '.'))
-        continue
-    end
+for team = teams
+    
+    confussion_row = zeros(1, length(teams));
     
     images = dir(strcat('data/', team.name, '/*.jpg'));
     for image = images'
@@ -68,13 +79,20 @@ for team = teams'
                 disp(result);
             end
             
+            if result ~= 0
+                confussion_row(k) = confussion_row(k) + 1;
+            end
+            
             results(end + 1) = struct('name', strcat(team.name, '-', image.name), 'result', result, 'real', k, 'features', features);
         end        
     end
+    confussion_row = confussion_row / length(images);
+    confussion_matrix = [confussion_matrix; confussion_row];
 
     k = k + 1;
 end
 
+disp(confussion_matrix);
 
 
 disp('===================================================');
