@@ -13,7 +13,7 @@ function [diff] = comp_im_hsv(histogram, model)
     for region = model.regions
         hist_sum = regions_lib.get_region_sum(region, histogram);
         model_sum = region.sum;
-        diff = diff + (model_sum - hist_sum)^2 / (model_sum + hist_sum);
+        diff = diff + (model_sum - hist_sum)^2;
     end
 end
 
