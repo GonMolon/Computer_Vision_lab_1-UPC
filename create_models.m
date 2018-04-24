@@ -25,22 +25,13 @@ function [models] = create_models()
     images(end + 1).im = im(75:end, 60:165, :);
     images(end).name = '31.jpg';
 
-    im = imread('data/madrid/32.jpg');
-    images(end + 1).im = im(82:end, 45:140, :);
-    images(end).name = '32.jpg';
+    im = imread('data/madrid/01.jpg');
+    images(end + 1).im = im(150:end, 10:140, :);
+    images(end).name = '01.jpg';
 
     im = imread('data/psv/17.jpg');
     images(end + 1).im = im(100:end, 35:end, :);
     images(end).name = '17.jpg';
-
-    im = imread('data/rcdespanol/11.jpg');
-    images(end + 1).im = im(155:end, 245:385, :);
-    images(end).name = '11.jpg';
-
-    im = imread('data/roma/11.jpg');
-    images(end + 1).im = im(120:end, 60:160, :);
-    images(end).name = '11.jpg';
-
 
     models = [struct('team_id', {}, 'name', {}, 'im', {}, 'im_norm', {}, 'histogram', {}, 'regions', {}, 'weight', {})];
 
