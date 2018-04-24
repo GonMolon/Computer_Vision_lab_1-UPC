@@ -64,8 +64,8 @@ function [region, bitmap] = expand_region(region, bitmap, histogram)
     
     [N, M] = size(histogram);
     
-    region.x_from = region.x_from - 4;
-    region.x_to = region.x_to + 4;
+    region.x_from = region.x_from - 3;
+    region.x_to = region.x_to + 3;
     if get_area_value(region.x_from, region.x_to, region.y_from, region.y_to, bitmap, @max)
         region.sum = -1;
         return
