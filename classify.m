@@ -72,7 +72,6 @@ function [result, features] = classify(im, models)
     for k = 1 : length(models)
         if features(k).matching_subimages > 0
             diff = features(k).sum_diff / features(k).matching_subimages^2;
-            diff = diff - (THRESHOLD - features(k).min_diff);
             if min_matching_diff == -1 || diff < min_matching_diff
                 result = k;
                 min_matching_diff = diff;
@@ -97,7 +96,7 @@ function [result, features] = classify(im, models)
             disp('Min_diff:');
             disp(features(result).min_diff);
             disp('Final_diff');
-            disp(min_diff);
+            disp(min_matching_diff);
         end
         disp('===================================================');
     end
