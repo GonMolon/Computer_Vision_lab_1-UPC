@@ -13,9 +13,9 @@ function [result, features] = classify(im, models)
     end
     
     total_blocks = 0;
-    for i_from = 1 : SUBIMAGE_SIZE : size (im, 1) - SUBIMAGE_SIZE
+    for i_from = 1 : SUBIMAGE_SIZE/2 : size (im, 1) - SUBIMAGE_SIZE
         i_to = i_from + SUBIMAGE_SIZE;
-        for j_from = 1 : SUBIMAGE_SIZE : size(im, 2) - SUBIMAGE_SIZE
+        for j_from = 1 : SUBIMAGE_SIZE/2 : size(im, 2) - SUBIMAGE_SIZE
             j_to = j_from + SUBIMAGE_SIZE;
             
             total_blocks = total_blocks + 1;
@@ -66,7 +66,7 @@ function [result, features] = classify(im, models)
     for k = 1 : length(models)
         if features(k).matching_subimages > 0
             final_diff = features(k).sum_diff / features(k).matching_subimages^2;
-            % final_diff = final_diff - (THRESHOLD - features(k).min_diff)
+            final_diff = final_diff - (THRESHOLD - features(k).min_diff);
             if min_diff == -1 || final_diff < min_diff
                 result = k;
                 min_diff = final_diff;
