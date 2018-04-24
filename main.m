@@ -5,7 +5,7 @@ global N_BINS
 N_BINS = 60;
 
 global THRESHOLD
-THRESHOLD = 0.5;
+THRESHOLD = 0.04;
 
 global TIGHTNESS
 TIGHTNESS = 0.01;
@@ -20,7 +20,9 @@ global VERBOSE
 VERBOSE = false;
 
 if VERBOSE
-    global FIG_IMAGE, FIG_SUBIMAGE, FIG_HIST
+    global FIG_IMAGE
+    global FIG_SUBIMAGE
+    global FIG_HIST
     FIG_IMAGE = figure(1);
     FIG_SUBIMAGE = figure(2);
     FIG_HIST = figure(3);
@@ -58,9 +60,12 @@ for team = teams'
             
             if k == result
                 correct_predictions = correct_predictions + 1;
-                disp('Correct classification');
+                disp('Good');
+            elseif result == 0
+                disp('?????????????')
             else
-                disp('Incorrect classification!!!!!!');
+                disp('!!!!!!!!!!!!!');
+                disp(result);
             end
             
             results(end + 1) = struct('name', strcat(team.name, '-', image.name), 'result', result, 'real', k, 'features', features);

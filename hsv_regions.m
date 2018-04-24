@@ -7,7 +7,7 @@ end
 function [best_regions, max_weight] = extract_regions(histogram)
     global VERBOSE
     was_verbose = VERBOSE;
-%     VERBOSE = false; % Comment this line to plot the process finding the regions
+    VERBOSE = false; % Comment this line to plot the process finding the regions
     global SEED
     max_weight = 0;
     for iteration = 1 : 1
@@ -15,6 +15,10 @@ function [best_regions, max_weight] = extract_regions(histogram)
         SEED = SEED + 1;
 
         [regions, weight] = get_regions(histogram, centroids);
+        if was_verbose
+            show_regions(regions, histogram);
+            while waitforbuttonpress == 0 end
+        end
         if weight > max_weight
             best_regions = regions;
             max_weight = weight;
@@ -50,11 +54,6 @@ function [regions, weight] = get_regions(histogram, centroids)
     
     if length(regions) == 0
         disp('Not significant regions found!!!!!');
-    end
-    
-    if VERBOSE
-        show_regions(regions, histogram);
-        while waitforbuttonpress == 0 end
     end
 end
 
