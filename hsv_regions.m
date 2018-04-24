@@ -3,7 +3,7 @@ function [regions_lib] = hsv_regions()
     regions_lib.show_regions = @show_regions;
 end
 
-function [best_regions] = extract_regions(histogram)
+function [best_regions, max_weight] = extract_regions(histogram)
     global VERBOSE
     was_verbose = VERBOSE;
     VERBOSE = false; % Comment this line to plot the process finding the regions
@@ -16,6 +16,7 @@ function [best_regions] = extract_regions(histogram)
         [regions, weight] = get_regions(histogram, centroids);
         if weight > max_weight
             best_regions = regions;
+            max_weight = weight;
         end
     end
     VERBOSE = was_verbose;

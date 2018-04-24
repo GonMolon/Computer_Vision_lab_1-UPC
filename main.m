@@ -17,10 +17,10 @@ global SEED
 SEED = 17;
 
 global VERBOSE
-VERBOSE = true;
+VERBOSE = false;
 
 if VERBOSE
-    global FIG_IMAGE FIG_SUBIMAGE FIG_HIST
+    global FIG_IMAGE, FIG_SUBIMAGE, FIG_HIST
     FIG_IMAGE = figure(1);
     FIG_SUBIMAGE = figure(2);
     FIG_HIST = figure(3);

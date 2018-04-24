@@ -1,4 +1,5 @@
 function [models] = create_models()
+    global VERBOSE
     global FIG_SUBIMAGE
     global FIG_HIST
     
@@ -41,17 +42,21 @@ function [models] = create_models()
     images(end).name = '11.jpg';
 
 
-    models = [struct('team_id', {}, 'name', {}, 'im', {}, 'im_norm', {}, 'histogram', {}, 'regions', {})];
+    models = [struct('team_id', {}, 'name', {}, 'im', {}, 'im_norm', {}, 'histogram', {}, 'regions', {}, 'weight', {})];
 
     for k = 1 : length(images)
-        figure(FIG_SUBIMAGE), subplot(2, 1, 1), imshow(images(k).im);
-        figure(FIG_HIST);
+        if VERBOSE
+            figure(FIG_SUBIMAGE), subplot(2, 1, 1), imshow(images(k).im);
+            figure(FIG_HIST);
+        end
+        disp("Creating model:");
+        disp(k);
         models(k).team_id = k;
         models(k).name = images(k).name;
         models(k).im = images(k).im;
         models(k).im_norm = hsv2rgb(normalizer_hsv(models(k).im));
         models(k).histogram = get_hsv_histogram(models(k).im);
         regions_lib = hsv_regions();
-        models(k).regions = regions_lib.extract_regions(models(k).histogram);
+        [models(k).regions, models(k).weight] = regions_lib.extract_regions(models(k).histogram);
     end
 end

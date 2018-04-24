@@ -3,6 +3,7 @@ function [result, features] = classify(im, models)
     global VERBOSE
     global THRESHOLD
     global FIG_SUBIMAGE
+    global FIG_HIST
     
     features = [struct('min_diff', {}, 'matching_subimages', {}, 'sum_diff', {})];
     for k = 1 : length(models)
