@@ -10,7 +10,7 @@ function [best_regions, max_weight] = extract_regions(histogram)
     VERBOSE = false; % Comment this line to plot the process finding the regions
     global SEED
     max_weight = 0;
-    for iteration = 1 : 1
+    for iteration = 1 : 5
         centroids = k_means(10, histogram);
         SEED = SEED + 1;
 

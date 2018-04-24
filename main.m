@@ -80,18 +80,19 @@ for team = teams
             end
             
             if result ~= 0
-                confussion_row(k) = confussion_row(k) + 1;
+                confussion_row(result) = confussion_row(result) + 1;
             end
             
             results(end + 1) = struct('name', strcat(team.name, '-', image.name), 'result', result, 'real', k, 'features', features);
         end        
     end
-    confussion_row = confussion_row / length(images);
+    confussion_row = confussion_row ./ length(images);
     confussion_matrix = [confussion_matrix; confussion_row];
 
     k = k + 1;
 end
 
+disp('Confussion matrix:');
 disp(confussion_matrix);
 
 

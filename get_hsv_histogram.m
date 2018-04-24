@@ -7,7 +7,7 @@ function [h] = get_hsv_histogram(im)
             if im_hsl(i, j, 3) < 0.2
                 im_hsl(i, j, 1) = 0.7 + im_hsl(i, j, 1)*0.1;
                 im_hsl(i, j, 2) = -0.5;
-            elseif im_hsl(i, j, 3) > 0.85
+            elseif im_hsl(i, j, 3) > 0.7
                 im_hsl(i, j, 1) = 0.2 + im_hsl(i, j, 1)*0.1;
                 im_hsl(i, j, 2) = -0.5;
             end
