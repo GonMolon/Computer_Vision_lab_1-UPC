@@ -13,6 +13,8 @@ function [result, features] = classify(im, models)
     end
     
     total_blocks = 0;
+    min_subimage_diff = -1;
+    min_subimage_k = 0;
     for i_from = 1 : SUBIMAGE_SIZE/2 : size (im, 1) - SUBIMAGE_SIZE
         i_to = i_from + SUBIMAGE_SIZE;
         for j_from = 1 : SUBIMAGE_SIZE/2 : size(im, 2) - SUBIMAGE_SIZE
@@ -41,7 +43,11 @@ function [result, features] = classify(im, models)
                 
                 if features(k).min_diff == -1 || diff < features(k).min_diff
                     features(k).min_diff = diff;
-                end
+                    if min_subimage_diff == -1 || diff < min_subimage_diff
+                        min_subimage_diff = diff;
+                        min_subimage_k = k;
+                    end
+                end 
                 
                 if diff < THRESHOLD
                     features(k).matching_subimages = features(k).matching_subimages + 1;
@@ -57,21 +63,24 @@ function [result, features] = classify(im, models)
                     while waitforbuttonpress == 0 end
                     disp('---------------------------------');
                 end
-            end   
+            end
         end
     end
 
-    min_diff = -1;
+    min_matching_diff = -1;
     result = 0;
     for k = 1 : length(models)
         if features(k).matching_subimages > 0
-            final_diff = features(k).sum_diff / features(k).matching_subimages^2;
-            final_diff = final_diff - (THRESHOLD - features(k).min_diff);
-            if min_diff == -1 || final_diff < min_diff
+            diff = features(k).sum_diff / features(k).matching_subimages^2;
+            diff = diff - (THRESHOLD - features(k).min_diff);
+            if min_matching_diff == -1 || diff < min_matching_diff
                 result = k;
-                min_diff = final_diff;
+                min_matching_diff = diff;
             end
         end
+    end
+    if result == 0
+        result = min_subimage_k;
     end
     
     if VERBOSE
