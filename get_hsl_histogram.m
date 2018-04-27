@@ -1,4 +1,4 @@
-function [h] = get_hsv_histogram(im)
+function [h] = get_hsl_histogram(im)
     global N_BINS
     im_hsl = colorspace(['HSL', '<-RGB'], im);
     im_hsl(:, :, 1) = im_hsl(:, :, 1)/360;

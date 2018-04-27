@@ -27,14 +27,14 @@ function [result, features] = classify(im, models)
                 figure(FIG_SUBIMAGE), subplot(2, 1, 2), imshow(sub_im), title('Current subimage');
             end
             
-            histogram = get_hsv_histogram(sub_im);
+            histogram = get_hsl_histogram(sub_im);
             for k = 1 : length(models)
                 model = models(k);
                 if VERBOSE
                     figure(FIG_SUBIMAGE), subplot(2, 1, 1), imshow(model.im), title('Model');
                 end
 
-                diff = comp_im_hsv(histogram, model);
+                diff = comp_im_hsl(histogram, model);
 
                 if VERBOSE
                     disp('Diff:');

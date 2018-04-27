@@ -1,8 +1,8 @@
-function [diff] = comp_im_hsv(histogram, model)
+function [diff] = comp_im_hsl(histogram, model)
     global VERBOSE
     global FIG_HIST
 
-    regions_lib = hsv_regions();
+    regions_lib = hsl_regions();
     if VERBOSE
         figure(FIG_HIST);
         subplot(2, 1, 1), regions_lib.show_regions(model.regions, model.histogram);

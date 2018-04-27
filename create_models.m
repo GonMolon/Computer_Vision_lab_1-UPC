@@ -46,8 +46,8 @@ function [models] = create_models()
         models(k).name = images(k).name;
         models(k).im = images(k).im;
         models(k).im_norm = hsv2rgb(normalizer_hsv(models(k).im));
-        models(k).histogram = get_hsv_histogram(models(k).im);
-        regions_lib = hsv_regions();
+        models(k).histogram = get_hsl_histogram(models(k).im);
+        regions_lib = hsl_regions();
         [models(k).regions, models(k).weight] = regions_lib.extract_regions(models(k).histogram);
     end
 end
